@@ -31,28 +31,25 @@ There are so much more !
 ## Example
 The following segment demonstrates how to add an entry.
 ```
-C:\Downloads\Directory>mclip 
-
-attention: type(n) for new line.
-The keywords that you saved are: 
-
-what is the keyword that you want to add? hello
-what is the new phrase that you want to add?world
-
-Anything else (y/n): n
+C:\Production\mclip++>mclip add
+What is the key that you want to add?hello
+What is the value? (press control-z and enter to end)
+world
+^Z
+Anything else(yes/no): n
 Press any key to continue . . .
 ```
 The following segment demonstrates how to get the value of an entry to your device clipboard
 ```
-C:\Downloads\Directory>mclip hello
+C:\Production\mclip++>mclip hello
 hello : world
-Text for hello copied to clipboard.
-Anything else (y/n): n
+Value of "hello" copied to clipboard.
+Anything else(yes/no): n
 Press any key to continue . . .
 ```
 
 ## Sidenote
-Mclip is a personal project, and the data you entered will be stored locally in a text file called phrases.txt, which you will download with the rest of the program. However, the data will not be encrypted (not in this version), so use it at your own risk.
+Mclip is a personal project, and the data you entered will be stored locally in a text file called mclip.dat, which you will download with the rest of the program. However, the data will not be encrypted (not in this version), which mean any program/person can access it.
 
 ## Credit
 This program is inspired by the Mclip program in Chapter6 of [Automate the Boring Stuff with Python: Practical Programming for Total Beginners](https://automatetheboringstuff.com/) written by [Al Sweigart](https://alsweigart.com/). However, I added my own twist to it to make it work differently and have much more functionality.

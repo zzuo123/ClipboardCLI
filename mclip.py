@@ -1,108 +1,125 @@
 import sys
 import pyperclip
-
-TEXT = {}  # store data from the phrases file
+import pickle
 
 if len(sys.argv) < 2:
-    print(
-        '\nUsage: py mclip.py [keyphrase] - keys/add/edit/delete/keys/all/exit')
-    sys.argv.append(input("what do you want to do?").lower())
+    print('\nUsage: py mclip.py [command] - key/add/edit/delete/keys/all/exit')
+    sys.argv.append(input("What do you want to do?").lower())
     if sys.argv[1] == 'exit':
         sys.exit()
 
-keyphrase = sys.argv[1].lower()  # first command line arg is the keyphrase
+command = sys.argv[1].lower()  # second command line arg is the command
 
 
-def get(keyphrase):
-    if keyphrase in TEXT:
-        result = TEXT[keyphrase][0:len(
-            TEXT[keyphrase]) - 1].replace("(n)", "\n")
-        print(keyphrase+" : "+result)
+def yn_input(prompt):
+    raw = input(prompt+"(yes/no): ")
+    if(len(raw) == 0 or (raw[0].lower() != 'y' and raw[0].lower() != 'n')):
+        print('I am not sure what you typed in, please try again.')
+        return yn_input(prompt)
+    return raw[0].lower() == 'y'
+
+
+def print_entry(key, val):
+    print(key + " : " + val.replace("\n", " ")[0:10], end="")
+    if len(val) >= 10:
+        print("...")
+    print()
+
+
+def get(key, clipboard):
+    key = key.replace("\n", "")
+    if key in clipboard:
+        # remove the newline at the end and replace (n) with new line
+        result = clipboard[key][0:len(clipboard[key]) - 1]
+        print_entry(key, result)
         pyperclip.copy(result)
-        print('Text for ' + keyphrase + ' copied to clipboard.')
+        print('Value of \"' + key + '\" copied to clipboard.')
     else:
-        print('There is no text for ' + keyphrase)
+        print('There is no value for \"' + key+'\"')
 
 
-def edit():
-    print_content()
-    newKey = input("what is the keyword that you want to edit? ")
-    if(newKey in TEXT):
-        TEXT[newKey] = input(
-            "what is the new phrase that you want to change to?")
+def edit(clipboard, newKey=None):
+    print_keys(clipboard)
+    if not newKey:
+        newKey = input("What is the key that you want to edit?")
+    if(newKey in clipboard):
+        print("What is the value? (press control-z and enter to end)")
+        clipboard[newKey] = "".join(sys.stdin.readlines())
     else:
-        print("Sorry, your key does not exist.")
+        print("Key \"" + newKey + "\" cannot be found.")
 
 
-def add():
-    print_content()
-    newKey = input("what is the keyword that you want to add? ")
-    TEXT[newKey] = input("what is the new phrase that you want to add?")
+def add(clipboard):
+    newKey = input("What is the key that you want to add?")
+    if newKey in clipboard.keys():
+        if(not yn_input("There is already an entry, want to edit it?")):
+            return
+    print("What is the value? (press control-z and enter to end)")
+    clipboard[newKey] = "".join(sys.stdin.readlines())
 
 
-def delete():
-    print_content()
-    del TEXT[input("what is the keyword that you want to delete?")]
+
+def delete(clipboard):
+    print_keys(clipboard)
+    key = input("What is the key that you want to delete?")
+    if key in clipboard.keys():
+        print("Key \""+key+"\" deleted")
+        clipboard.pop(key)
+    else:
+        print("Key \""+key+"\"not found")
 
 
-def print_content():
-    print("The keywords that you saved are: ")
-    for keyword in TEXT.keys():
+def print_keys(clipboard):
+    print("The keys that you saved are: ")
+    for keyword in clipboard.keys():
         print(keyword, end=', ')
     print()
 
 
-def print_all():
+def print_all(clipboard):
     print("\nYour Clipboard:")
-    for keyword in TEXT.keys():
-        print(keyword, end="\t")
-        print(TEXT.get(keyword), end="")
+    for keyword in clipboard.keys():
+        print_entry(keyword, clipboard.get(keyword))
     print()
 
 
 def read():
-    file = open("phrases.txt", "r")
-    count = 1
-    key = ""
-    for lines in file:
-        if count == 1:
-            key = lines.split()[0]
-        elif count == 2:
-            TEXT[key] = lines
-        elif count == 3:
-            count = 0
-        count += 1
+    try:
+        file = open('mclip.dat', 'rb')
+        data = pickle.load(file)
+        file.close()
+        return data
+    except FileNotFoundError:
+        print("File \"mclip.bat\" is not found and will be created")
+        return {}  # create a new dictionary clipboard if the file does not exist
 
 
-def write():
-    file = open("phrases.txt", "w")
-    for key in TEXT.keys():
-        file.write(key)
-        file.write("\n")
-        file.write(TEXT[key])
-        file.write("\n")
+def write(clipboard):
+    file = open("mclip.dat", "wb")
+    pickle.dump(clipboard, file)
+    file.close()
 
 
-def main(keyphrase):
-    read()
-    if keyphrase == 'edit':
-        edit()
-    elif keyphrase == 'add':
-        print("attention: type(n) for new line.")
-        add()
-    elif keyphrase == 'delete':
-        delete()
-    elif keyphrase == 'all':
-        print_all()
-    elif keyphrase == 'keys':
-        print_content()
+def main(command):
+    clipboard = read()
+    if command == 'edit':
+        edit(clipboard)
+    elif command == 'add':
+        add(clipboard)
+    elif command == 'delete':
+        delete(clipboard)
+    elif command == 'all':
+        print_all(clipboard)
+    elif command == 'keys':
+        print_keys(clipboard)
     else:
-        get(keyphrase)
-    write()
-    if(input("Anything else (y/n): ") == 'y'):
-        print_content()
-        keyphrase = input('WHat else do you want to do: ')
-        main(keyphrase)
+        get(command, clipboard)
+    if(yn_input("Anything else")):
+        print()
+        print_keys(clipboard)
+        command = input('What else do you want to do: ')
+        main(command)
+    write(clipboard)
 
 
-main(keyphrase)
+main(command)
