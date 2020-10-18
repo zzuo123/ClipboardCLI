@@ -15,6 +15,10 @@ pip install sys
 pip install pyperclip
 ```
 6. You might want to add an entry of the current directory to system path so that you can access the mclip program from anywhere in command prompt. A [tutorial](https://www.computerhope.com/issues/ch000549.htm#:~:text=%20Setting%20the%20path%20and%20variables%20in%20Windows,system%20settings%20link%20in%20the%20left...%20More%20) can be found [here](https://www.computerhope.com/issues/ch000549.htm#:~:text=%20Setting%20the%20path%20and%20variables%20in%20Windows,system%20settings%20link%20in%20the%20left...%20More%20).
+7. Modify the [mclip.bat](https://github.com/zzuo123/MclipPlusPlus/blob/master/mclip.bat) file using vscode or Notepad, and add current directory to where it says:
+```
+cd :: put the directory of this folder here!
+```
 
 ## Usage
 1. Type in mclip in command prompt and you will see a list of commands you can do with this program
