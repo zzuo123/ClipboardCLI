@@ -49,7 +49,7 @@ Press any key to continue . . .
 ```
 
 ## Sidenote
-Mclip is a personal project, and the data you entered will be stored locally in a .dat file called mclip.dat, which will altomatically created when you first run the program. However, the data will not be encrypted (not in this version), which mean any program/person can access it.
+Mclip is a personal project, and the data you entered will be stored locally in a .dat file called mclip.dat, which will be altomatically created when you first run the program. However, the data will not be encrypted (not in this version), which means any program/person can access it.
 
 ## Credit
 This program is inspired by the Mclip program in Chapter6 of [Automate the Boring Stuff with Python: Practical Programming for Total Beginners](https://automatetheboringstuff.com/) written by [Al Sweigart](https://alsweigart.com/). However, I added my own twist to it to make it work differently and have much more functionality.
