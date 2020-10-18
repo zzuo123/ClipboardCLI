@@ -19,13 +19,37 @@ pip install pyperclip
 ## Usage
 1. Type in mclip in command prompt and you will see a list of commands you can do with this program
 2. You may also specify command when you run mclip, such as
-```batch
+```
+mclip *** :: (*** is the key) This will copy the value of the entry that matches the key
 mclip all :: This shows you all the entries in the mclip clipboard
-mclip add :: This will allow you to add an entry to mclip
+mclip add :: This will allow you to add an entry to mclip (key and value) (type (n) as newline)
 mclip delete :: This will allow you to delete an entry
 mclip keys :: This will only show you the keys of all the entries in mclip
 ```
 There are so much more !
+
+## Example
+The following segment demonstrates how to add an entry.
+```
+C:\Downloads\Directory>mclip 
+
+attention: type(n) for new line.
+The keywords that you saved are: 
+
+what is the keyword that you want to add? hello
+what is the new phrase that you want to add?world
+
+Anything else (y/n): n
+Press any key to continue . . .
+```
+The following segment demonstrates how to get the value of an entry to your device clipboard
+```
+C:\Downloads\Directory>mclip hello
+hello : world
+Text for hello copied to clipboard.
+Anything else (y/n): n
+Press any key to continue . . .
+```
 
 ## Sidenote
 Mclip is a personal project, and the data you entered will be stored locally in a text file called phrases.txt, which you will download with the rest of the program. However, the data will not be encrypted (not in this version), so use it at your own risk.
