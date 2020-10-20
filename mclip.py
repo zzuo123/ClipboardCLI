@@ -26,7 +26,7 @@ def print_entry(key, val):
     print()
 
 
-def get(key, clipboard):
+def get(key):
     key = key.replace("\n", "")
     if key in clipboard:
         # remove the newline at the end and replace (n) with new line
@@ -38,10 +38,9 @@ def get(key, clipboard):
         print('There is no value for \"' + key+'\"')
 
 
-def edit(clipboard, newKey=None):
-    print_keys(clipboard)
-    if not newKey:
-        newKey = input("What is the key that you want to edit?")
+def edit():
+    print_keys()
+    newKey = input("What is the key that you want to edit?")
     if(newKey in clipboard):
         print("What is the value? (press control-z and enter to end)")
         clipboard[newKey] = "".join(sys.stdin.readlines())
@@ -49,7 +48,7 @@ def edit(clipboard, newKey=None):
         print("Key \"" + newKey + "\" cannot be found.")
 
 
-def add(clipboard):
+def add():
     newKey = input("What is the key that you want to add?")
     if newKey in clipboard.keys():
         if(not yn_input("There is already an entry, want to edit it?")):
@@ -59,8 +58,8 @@ def add(clipboard):
 
 
 
-def delete(clipboard):
-    print_keys(clipboard)
+def delete():
+    print_keys()
     key = input("What is the key that you want to delete?")
     if key in clipboard.keys():
         print("Key \""+key+"\" deleted")
@@ -69,14 +68,14 @@ def delete(clipboard):
         print("Key \""+key+"\"not found")
 
 
-def print_keys(clipboard):
+def print_keys():
     print("The keys that you saved are: ")
     for keyword in clipboard.keys():
         print(keyword, end=', ')
     print()
 
 
-def print_all(clipboard):
+def print_all():
     print("\nYour Clipboard:")
     for keyword in clipboard.keys():
         print_entry(keyword, clipboard.get(keyword))
@@ -94,32 +93,34 @@ def read():
         return {}  # create a new dictionary clipboard if the file does not exist
 
 
-def write(clipboard):
+def write():
     file = open("mclip.dat", "wb")
     pickle.dump(clipboard, file)
     file.close()
 
 
+clipboard = read()
+
+
 def main(command):
-    clipboard = read()
     if command == 'edit':
-        edit(clipboard)
+        edit()
     elif command == 'add':
-        add(clipboard)
+        add()
     elif command == 'delete':
-        delete(clipboard)
+        delete()
     elif command == 'all':
-        print_all(clipboard)
+        print_all()
     elif command == 'keys':
-        print_keys(clipboard)
+        print_keys()
     else:
-        get(command, clipboard)
+        get(command)
+    write()
     if(yn_input("Anything else")):
         print()
-        print_keys(clipboard)
+        print_keys()
         command = input('What else do you want to do: ')
         main(command)
-    write(clipboard)
 
 
 main(command)
