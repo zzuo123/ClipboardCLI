@@ -57,5 +57,3 @@ Mclip is a personal project, and the data you entered will be stored locally in 
 
 ## Credit
 This program is inspired by the Mclip program in Chapter6 of [Automate the Boring Stuff with Python: Practical Programming for Total Beginners](https://automatetheboringstuff.com/) written by [Al Sweigart](https://alsweigart.com/). However, I added my own twist to it to make it work differently and have much more functionality.
-
-## Enjoy!
