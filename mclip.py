@@ -13,10 +13,27 @@ def yn_input(prompt):
         bool: True if input starts with y, False if input starts with n
     """    
     raw = input(prompt+"(yes/no): ")
-    if(len(raw) == 0 or (raw[0].lower() != 'y' and raw[0].lower() != 'n')):
+    acceptable_input = ['y','ye','yes','yeah','n','no','nah','naw', '']
+    if raw not in acceptable_input:
         print('I am not sure what you typed in, please try again.')
         return yn_input(prompt)
-    return raw[0].lower() == 'y'
+    if len(raw) > 0 and raw[0].lower() == 'y':
+        return True
+    return False
+
+
+def str_input():
+    """get string input from user (multi lines or single line)
+
+    Returns:
+        str: user input
+    """    
+    if yn_input("Will you be inputting multiple lines?"):
+        print("What is the value? (press control-z and enter to end)")
+        return "".join(sys.stdin.readlines())
+    else:
+        return input("What is the value? (press enter to end):")
+
 
 
 def print_entry(key, val):
@@ -40,8 +57,9 @@ def get(key):
     """    
     key = key.replace("\n", "")
     if key in clipboard:
+        ps_result = clipboard[key]
         # remove the newline at the end and replace (n) with new line
-        result = clipboard[key][0:len(clipboard[key]) - 1]
+        result = ps_result[0:len(ps_result) - 1]
         print_entry(key, result)
         pyperclip.copy(result)
         print('Value of \"' + key + '\" copied to clipboard.')
@@ -53,12 +71,12 @@ def edit():
     """edit specific entry in database
     """    
     print_keys()
-    newKey = input("What is the key that you want to edit?")
-    if(newKey in clipboard):
-        print("What is the value? (press control-z and enter to end)")
-        clipboard[newKey] = "".join(sys.stdin.readlines())
+    key = input("What is the key that you want to edit?")
+    if(key in clipboard):
+        clipboard[key] = str_input()
     else:
-        print("Key \"" + newKey + "\" cannot be found.")
+        if yn_input("Key \"" + key + "\" cannot be found, wanna add it?"):
+            clipboard[key] = str_input()
 
 
 def add():
@@ -68,8 +86,7 @@ def add():
     if newKey in clipboard.keys():
         if(not yn_input("There is already an entry, want to edit it?")):
             return
-    print("What is the value? (press control-z and enter to end)")
-    clipboard[newKey] = "".join(sys.stdin.readlines())
+    clipboard[newKey] = str_input()
 
 
 def delete():
@@ -81,7 +98,7 @@ def delete():
         print("Key \""+key+"\" deleted")
         clipboard.pop(key)
     else:
-        print("Key \""+key+"\"not found")
+        print("Key \"" + key + "\" cannot be found.")
 
 
 def print_keys():
