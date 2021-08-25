@@ -45,7 +45,7 @@ def print_entry(key, val):
     """    
     print(key + " : " + val.replace("\n", " ")[0:10], end="")
     if len(val) >= 10:
-        print("...")
+        print("...", end="")
     print()
 
 
