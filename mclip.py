@@ -2,16 +2,16 @@ import sys
 import pyperclip
 import pickle
 
-if len(sys.argv) < 2:
-    print('\nUsage: py mclip.py [command] - key/add/edit/delete/keys/all/exit')
-    sys.argv.append(input("What do you want to do?").lower())
-    if sys.argv[1] == 'exit':
-        sys.exit()
-
-command = sys.argv[1].lower()  # second command line arg is the command
-
 
 def yn_input(prompt):
+    """get yes/no type input from user
+
+    Args:
+        prompt (str): the question to ask user
+
+    Returns:
+        bool: True if input starts with y, False if input starts with n
+    """    
     raw = input(prompt+"(yes/no): ")
     if(len(raw) == 0 or (raw[0].lower() != 'y' and raw[0].lower() != 'n')):
         print('I am not sure what you typed in, please try again.')
@@ -20,6 +20,12 @@ def yn_input(prompt):
 
 
 def print_entry(key, val):
+    """print one entry in the database, hide part of the value if it's too long
+
+    Args:
+        key (str): the key to print
+        val (str): the value to print
+    """    
     print(key + " : " + val.replace("\n", " ")[0:10], end="")
     if len(val) >= 10:
         print("...")
@@ -27,6 +33,11 @@ def print_entry(key, val):
 
 
 def get(key):
+    """get the value of given key from database and copy to clipboard
+
+    Args:
+        key (str): the key to get the value from
+    """    
     key = key.replace("\n", "")
     if key in clipboard:
         # remove the newline at the end and replace (n) with new line
@@ -39,6 +50,8 @@ def get(key):
 
 
 def edit():
+    """edit specific entry in database
+    """    
     print_keys()
     newKey = input("What is the key that you want to edit?")
     if(newKey in clipboard):
@@ -49,6 +62,8 @@ def edit():
 
 
 def add():
+    """ask the user for input and add an entry to the database
+    """    
     newKey = input("What is the key that you want to add?")
     if newKey in clipboard.keys():
         if(not yn_input("There is already an entry, want to edit it?")):
@@ -57,8 +72,9 @@ def add():
     clipboard[newKey] = "".join(sys.stdin.readlines())
 
 
-
 def delete():
+    """delete an entry from the database
+    """    
     print_keys()
     key = input("What is the key that you want to delete?")
     if key in clipboard.keys():
@@ -69,6 +85,8 @@ def delete():
 
 
 def print_keys():
+    """print all existing keys in the database
+    """    
     print("The keys that you saved are: ")
     for keyword in clipboard.keys():
         print(keyword, end=', ')
@@ -76,6 +94,8 @@ def print_keys():
 
 
 def print_all():
+    """print all entries in the database (key:value)
+    """    
     print("\nYour Clipboard:")
     for keyword in clipboard.keys():
         print_entry(keyword, clipboard.get(keyword))
@@ -89,7 +109,7 @@ def read():
         file.close()
         return data
     except FileNotFoundError:
-        print("File \"mclip.bat\" is not found and will be created")
+        print("File \"mclip.dat\" is not found and will be created")
         return {}  # create a new dictionary clipboard if the file does not exist
 
 
@@ -97,9 +117,6 @@ def write():
     file = open("mclip.dat", "wb")
     pickle.dump(clipboard, file)
     file.close()
-
-
-clipboard = read()
 
 
 def main(command):
@@ -123,4 +140,12 @@ def main(command):
         main(command)
 
 
-main(command)
+if __name__ == '__main__':
+    clipboard = read()
+    # when the user types "mclip" and no argument
+    if len(sys.argv) < 2:
+        print('\nUsage: py mclip.py [command] - key/add/edit/delete/keys/all/exit')
+        sys.argv.append(input("What do you want to do?").lower())
+        if sys.argv[1] == 'exit':
+            sys.exit()
+    main(sys.argv[1].lower())
