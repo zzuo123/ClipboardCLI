@@ -55,11 +55,9 @@ def get(key):
     Args:
         key (str): the key to get the value from
     """    
-    key = key.replace("\n", "")
+    key = key.strip()
     if key in clipboard:
-        ps_result = clipboard[key]
-        # remove the newline at the end and replace (n) with new line
-        result = ps_result[0:len(ps_result) - 1]
+        result = clipboard[key]
         print_entry(key, result)
         pyperclip.copy(result)
         print('Value of \"' + key + '\" copied to clipboard.')
